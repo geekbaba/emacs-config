@@ -17,9 +17,7 @@
 (add-to-list 'load-path "~/go/src/github.com/nsf/gocode/emacs")
 (add-to-list 'load-path "~/el/plugins/exec-path-from-shell")
 
-
-
-
+;;test commit
 ;;Personal information
 (setq user-full-name "Jiang Hao")
 (setq user-mail-address "jianghao***@gmail.com")
