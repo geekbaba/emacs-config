@@ -11,6 +11,13 @@
 (add-to-list 'load-path "~/el/plugins")
 (add-to-list 'load-path "~/el/plugins/zencoding")
 (add-to-list 'load-path "~/el/plugins/mark-multiple.el")
+(add-to-list 'load-path "~/el/plugins/go-mode")
+(add-to-list 'load-path "~/el/plugins/popup")
+(add-to-list 'load-path "~/el/plugins/auto-complete")
+(add-to-list 'load-path "~/go/src/github.com/nsf/gocode/emacs")
+(add-to-list 'load-path "~/el/plugins/exec-path-from-shell")
+
+
 
 
 ;;Personal information
@@ -22,15 +29,36 @@
  
 ;;设置中文语言环境
 (set-language-environment 'Chinese-GB)
-(set-keyboard-coding-system 'euc-cn)
-(set-clipboard-coding-system 'euc-cn)
-(set-terminal-coding-system 'euc-cn)
-(set-buffer-file-coding-system 'euc-cn)
-(set-selection-coding-system 'euc-cn)
-(modify-coding-system-alist 'process "*" 'euc-cn)
-(setq default-process-coding-system
-      '(euc-cn . euc-cn))
-(setq-default pathname-coding-system 'euc-cn)
+;; 设置emacs 使用 utf-8
+(setq locale-coding-system 'utf-8)
+;; 设置键盘输入时的字符编码
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+;; 文件默认保存为 utf-8
+(set-buffer-file-coding-system 'utf-8)
+(set-default buffer-file-coding-system 'utf8)
+(set-default-coding-systems 'utf-8)
+;; 解决粘贴中文出现乱码的问题
+(set-clipboard-coding-system 'utf-8)
+;; 终端中文乱码
+(set-terminal-coding-system 'utf-8)
+(modify-coding-system-alist 'process "*" 'utf-8)
+(setq default-process-coding-system '(utf-8 . utf-8))
+;; 解决文件目录的中文名乱码
+(setq-default pathname-coding-system 'utf-8)
+(set-file-name-coding-system 'utf-8)
+;; 解决 Shell Mode(cmd) 下中文乱码问题
+(defun change-shell-mode-coding ()
+
+  (progn
+    (set-terminal-coding-system 'gbk)
+    (set-keyboard-coding-system 'gbk)
+    (set-selection-coding-system 'gbk)
+    (set-buffer-file-coding-system 'gbk)
+    (set-file-name-coding-system 'gbk)
+    (modify-coding-system-alist 'process "*" 'gbk)
+    (set-buffer-process-coding-system 'gbk 'gbk)
+    (set-file-name-coding-system 'gbk)))
 ;; 字体设置
 ;;(set-default-font "-outline-新宋体-normal-r-normal-normal-12-*-96-96-c-*-gb2312")
 (set-frame-font "Courier New-16")
@@ -125,18 +153,32 @@
 (column-number-mode t)
 
 ;; set switch window
-(defun select-next-window ()
-  "Switch to the next window" 
-  (interactive)
-  (select-window (next-window)))
+(windmove-default-keybindings);;use shift + left right switch window
 
-(defun select-previous-window ()
-  "Switch to the previous window" 
-  (interactive)
-  (select-window (previous-window)))
+;;go mode settings
+(require 'go-mode-autoloads)
 
-(global-set-key (kbd "C-<right>") 'select-next-window)
-(global-set-key (kbd "C-<left>")  'select-previous-window)
+(add-hook 'before-save-hook 'gofmt-before-save)
 
+(require 'go-autocomplete)
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/el/plugins/auto-complete/dict")
+(ac-config-default)
 
+;;require
+(require 'exec-path-from-shell)
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
 
+;;;; eshell CL clear screen
+
+(defun eshell-clear-screen ()
+    "clear screen"
+    (interactive)
+    (let ((inhibit-read-only t))
+        (erase-buffer)
+        (eshell-send-input)))
+(add-hook 'eshell-mode-hook
+    '(lambda ()
+        (local-set-key (kbd "C-l") 'eshell-clear-screen)))
