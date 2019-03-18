@@ -18,6 +18,7 @@
 (require 'autocomplete)
 
 (require 'go)
+(require 'clang)
 (require 'web)
 
 (require 'html)

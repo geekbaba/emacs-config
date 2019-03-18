@@ -29,7 +29,13 @@
 
 (add-hook 'php-mode-hook 'bs-php-mode-hook)
 
+(defun my-php-mode-hook ()
+  "My PHP-mode hook."
+  (require 'flycheck-phpstan)
+  (flycheck-mode t)
+  (flycheck-select-checker 'phpstan))
 
+(add-hook 'php-mode-hook 'my-php-mode-hook)
 
 (defun toggle-php-flavor-mode ()
   (interactive)
@@ -52,5 +58,12 @@
   (setq c-basic-offset 2))
 
 
+(setq-default phpstan-executable "/usr/local/bin/phpstan")
+
+((nil . ((php-project-root . auto)
+;;         (phpstan-executable . "/usr/local/bin/phpstan")
+         (phpstan-working-dir . (root . "~/phpstan/"))
+         (phpstan-config-file . (root . "~/phpstan/phpstan-custom.neon"))
+         (phpstan-level . max))))
 
 (provide 'web)

@@ -1,5 +1,5 @@
 ;;load plugins
-(setq initial-frame-alist '((top . 1) (left . 1) (width . 162) (height . 42) (alpha 90 50)))
+(setq initial-frame-alist '((top . 1) (left . 1) (width . 162) (height . 42) (alpha 75 70)))
 
 ;;test commit
 ;;Personal information
