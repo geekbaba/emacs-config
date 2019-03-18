@@ -1,5 +1,7 @@
 # emacs-config
 Personal emacs config 
 ```shell
-ln ./.emacs ~/.emacs
+cd ~ && git clone https://github.com/geekbaba/emacs-config.git el 
+
+cd el && ln ./.emacs ~/.emacs
 ```
