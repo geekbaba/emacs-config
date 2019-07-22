@@ -1,5 +1,5 @@
 ;;load plugins
-(setq initial-frame-alist '((top . 1) (left . 1) (width . 162) (height . 42) (alpha 75 70)))
+(setq initial-frame-alist '((top . 1) (left . 1) (width . 162) (height . 42) (alpha 95 90)))
 
 ;;test commit
 ;;Personal information
@@ -8,7 +8,8 @@
 
 ;;不要生成临时文件
 ;;(setq-default make-backup-files nil)
- 
+
+
 ;;设置中文语言环境
 (set-language-environment 'Chinese-GB)
 ;; 设置emacs 使用 utf-8
@@ -53,7 +54,7 @@
 ;;[[themes]]
 
 (add-to-list 'load-path "~/el/themes")
-
+(add-to-list 'load-path "~/el/company-mode")
 (require 'wombat-theme)
 
 ;;显示列号
@@ -143,4 +144,29 @@
 ;; you can select the key you prefer to
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 
+(add-hook 'after-init-hook 'global-company-mode)
+(use-package company-tabnine :ensure t)
+(require 'company-tabnine)
+(add-to-list 'company-backends #'company-tabnine)
+
+;; Trigger completion immediately.
+(setq company-idle-delay 0)
+
+;; Number the candidates (use M-1, M-2 etc to select completions).
+(setq company-show-numbers t)
+
+;; Use the tab-and-go frontend.
+;; Allows TAB to select and complete at the same time.
+(company-tng-configure-default)
+(setq company-frontends
+      '(company-tng-frontend
+        company-pseudo-tooltip-frontend
+        company-echo-metadata-frontend))
+
+
+(autoload 'helm-company "helm-company") ;; Not necessary if using ELPA package
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
 (provide 'basic)
